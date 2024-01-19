@@ -43,40 +43,45 @@ exports.signUp = async (req, res) => {
 
 // Step 7: Sign in a user
 exports.signIn = async (req, res) => {
-	// 1-  Find the user by userName in the database
-	const user = await User.findOne({ email: req.body.email });
-	if (!user) {
-		// 2-  Send an error response if the user doesn't exist
-		res.status(400).send({
-			message: "Failed! User doesn't exist"
+	try {
+		// 1-  Find the user by userName in the database
+		const user = await User.findOne({ email: req.body.email });
+		if (!user) {
+			// 2-  Send an error response if the user doesn't exist
+			res.status(400).send({
+				message: "Failed! User doesn't exist"
+			});
+			return;
+		}
+
+		// 3- Check if password matches
+		let isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
+
+		if (!isPasswordValid) {
+			//4- Send an error response if the password is invalid
+			res.status(401).send({
+				message: 'Invalid Password'
+			});
+			return;
+		}
+
+		// 5- Generate an access token
+		let token = jwt.sign({ id: user.email }, authConfig.secretKey, {
+			// the time here is specified in seconds as per a calculation of 24 hours
+			expiresIn: 86400
 		});
-		return;
+		let postData = {
+			name: user.name,
+			userName: user.userName,
+			email: user.email,
+			phone: user.phone,
+			userType: user.userType,
+			accessToken: token
+		}
+		// 6- Prepare response data
+		res.status(200).send({ postData, message: 'Login Successful' });
+
+	} catch (error) {
+		return res.status(500).send({ message: 'Login failed due to Internal server issues' })
 	}
-
-	// 3- Check if password matches
-	let isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
-
-	if (!isPasswordValid) {
-		//4- Send an error response if the password is invalid
-		res.status(401).send({
-			message: 'Invalid Password'
-		});
-		return;
-	}
-
-	// 5- Generate an access token
-	let token = jwt.sign({ id: user.email }, authConfig.secretKey, {
-		// the time here is specified in seconds as per a calculation of 24 hours
-		expiresIn: 86400
-	});
-
-	// 6- Prepare response data
-	res.status(200).send({
-		name: user.name,
-		userName: user.userName,
-		email: user.email,
-		phone: user.phone,
-		userType: user.userType,
-		accessToken: token
-	});
 };
