@@ -79,7 +79,7 @@ exports.signIn = async (req, res) => {
 			accessToken: token
 		}
 		// 6- Prepare response data
-		res.status(200).send({ postData, message: 'Login Successful' });
+		res.status(200).send({ data:postData, message: 'Login Successful' });
 
 	} catch (error) {
 		return res.status(500).send({ message: 'Login failed due to Internal server issues' })
