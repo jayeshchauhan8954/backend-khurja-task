@@ -1,13 +1,13 @@
 const Task = require('../model/task.model');
-const User = require('../model/user.model')
+const User = require('../model/user.model');
 /**
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
 const createTask = async (req, res) => {
+  const userEmail = req.user.email;
   try {
     const { task_name, description, task_status, priority, created_by, updated_by } = req.body;
-    const userEmail = req.body.user;
 
     // Check if user email is provided
     if (!userEmail) {
@@ -47,7 +47,7 @@ const createTask = async (req, res) => {
 
 
 const getAllTasks = async (req, res) => {
-  let userEmail = req.body.user;
+  let userEmail = req.user.email;
   try {
     if (!userEmail) {
       return res.status(400).send({ error: 'User email is required to gel all tasks' });
@@ -65,7 +65,7 @@ const getAllTasks = async (req, res) => {
 };
 
 const getTaskById = async (req, res) => {
-  let userEmail = req.body.user;
+  let userEmail = req.user.email;
   try {
     if (!userEmail) {
       return res.status(400).send({ error: 'User email is required to get a task' });
@@ -88,7 +88,7 @@ const getTaskById = async (req, res) => {
 };
 
 const updateTaskById = async (req, res) => {
-  let userEmail = req.body.user;
+  let userEmail = req.user.email;
   try {
     if (!userEmail) {
       return res.status(400).send({ error: 'User email is required to get a task' });
@@ -135,7 +135,7 @@ const updateTaskById = async (req, res) => {
 
 
 const deleteTaskById = async (req, res) => {
-  let userEmail = req.body.user;
+  let userEmail = req.user.email;
   try {
     if (!userEmail) {
       return res.status(400).send({ error: 'User email is required to get a task' });

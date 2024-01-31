@@ -76,8 +76,9 @@ exports.signIn = async (req, res) => {
 			email: user.email,
 			phone: user.phone,
 			userType: user.userType,
-			accessToken: token
 		}
+		// setting access token in headers
+		res.setHeader('accessToken',token)
 		// 6- Prepare response data
 		res.status(200).send({ data:postData, message: 'Login Successful' });
 
