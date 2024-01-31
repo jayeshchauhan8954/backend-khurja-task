@@ -66,10 +66,14 @@ exports.signIn = async (req, res) => {
 		}
 
 		// 5- Generate an access token
-		let token = jwt.sign({ id: user.email }, authConfig.secretKey, {
-			// the time here is specified in seconds as per a calculation of 24 hours
-			expiresIn: 86400
-		});
+		const token = jwt.sign({
+            id: user._id,
+            email: user.email,
+            name: user.name,
+            userType: user.userType,
+        }, authConfig.secretKey, {
+            expiresIn: 86400 // 24 hours
+        });
 		let postData = {
 			name: user.name,
 			userName: user.userName,
