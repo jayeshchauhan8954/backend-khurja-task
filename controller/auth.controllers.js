@@ -87,10 +87,18 @@ exports.signIn = async (req, res) => {
 		// res.setHeader('accessToken', token)
 
 		// setting the token in the cookies
-        res.cookie('accessToken', token, {
+        // res.cookie('accessToken', token, {
+        //     httpOnly: true,
+        //     maxAge: 86400 * 1000 // 24 hours in milliseconds
+        // });
+
+		res.setHeader('Set-Cookie', cookie.serialize('accessToken', token, {
             httpOnly: true,
-            maxAge: 86400 * 1000 // 24 hours in milliseconds
-        });
+            maxAge: 86400, // 24 hours in seconds
+            sameSite: 'lax', // Adjust this based on your requirements
+            path: '/' // Adjust this based on your requirements
+        }));
+
 		// 6- Prepare response data
 		res.status(200).send({ data: postData, message: 'Login Successful' });
 
