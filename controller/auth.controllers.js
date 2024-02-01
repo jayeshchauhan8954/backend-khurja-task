@@ -65,15 +65,17 @@ exports.signIn = async (req, res) => {
 			return;
 		}
 
+		// token data
+		let tokenData = {
+			id: user._id,
+			email: user.email,
+			name: user.name,
+			userType: user.userType,
+		}
 		// 5- Generate an access token
-		const token = jwt.sign({
-            id: user._id,
-            email: user.email,
-            name: user.name,
-            userType: user.userType,
-        }, authConfig.secretKey, {
-            expiresIn: 86400 // 24 hours
-        });
+		const token = jwt.sign(tokenData, authConfig.secretKey, {
+			expiresIn: 86400 // 24 hours
+		});
 		let postData = {
 			name: user.name,
 			userName: user.userName,
@@ -82,9 +84,14 @@ exports.signIn = async (req, res) => {
 			userType: user.userType,
 		}
 		// setting access token in headers
-		res.setHeader('accessToken',token)
+		// res.setHeader('accessToken', token)
+
+		// setting the token in the cookies
+		res.cookies.set('accesstoken', token, {
+            httpOnly: true,
+        });
 		// 6- Prepare response data
-		res.status(200).send({ data:postData, message: 'Login Successful' });
+		res.status(200).send({ data: postData, message: 'Login Successful' });
 
 	} catch (error) {
 		return res.status(500).send({ message: 'Login failed due to Internal server issues' })
