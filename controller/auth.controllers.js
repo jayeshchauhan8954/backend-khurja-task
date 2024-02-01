@@ -87,8 +87,9 @@ exports.signIn = async (req, res) => {
 		// res.setHeader('accessToken', token)
 
 		// setting the token in the cookies
-		res.cookies.set('accesstoken', token, {
+        res.cookie('accessToken', token, {
             httpOnly: true,
+            maxAge: 86400 * 1000 // 24 hours in milliseconds
         });
 		// 6- Prepare response data
 		res.status(200).send({ data: postData, message: 'Login Successful' });
