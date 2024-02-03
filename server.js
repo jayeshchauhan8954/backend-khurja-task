@@ -4,6 +4,7 @@ const cors = require('cors');
 // the below is for all configuration
 const serverConfig = require('./configs/server.config');
 const dbConfig = require('./configs/db.config');
+const cookieParser = require('cookie-parser')
 
 // the below is for bcrypt js i.e., used to encrypt and decrypt text (ex. password)
 const bcrypt = require('bcryptjs');
@@ -13,10 +14,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
-app.use(cors({
-	origin:'http://localhost:3000',
-	credentials:true
-})); // using cors to connect
+app.use(cors({})); // using cors to connect
+app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
