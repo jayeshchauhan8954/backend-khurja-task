@@ -13,7 +13,10 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
-app.use(cors()); // using cors to connect
+app.use(cors({
+	origin:'http://localhost:3000',
+	credentials:true
+})); // using cors to connect
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
